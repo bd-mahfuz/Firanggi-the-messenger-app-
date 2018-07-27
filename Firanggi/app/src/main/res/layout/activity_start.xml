@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/gradient_blue"
     tools:context=".StartActivity">
 
     <TextView
@@ -11,6 +12,33 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="This is start page !"
-        android:textSize="24sp"/>
+        android:text="@string/welcome_to_firanggi"
+        android:textSize="24sp" />
+
+    <Button
+        android:id="@+id/signUpBt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="126dp"
+        android:backgroundTint="@color/colorPrimary"
+        android:backgroundTintMode="src_in"
+        android:text="Need a New Account"
+        android:textAllCaps="false"
+        android:textColor="#fff"/>
+
+    <Button
+        android:id="@+id/signInBt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/signUpBt"
+        android:layout_centerHorizontal="true"
+        android:backgroundTint="@color/colorPrimary"
+        android:backgroundTintMode="src_in"
+        android:text="Already have an Account"
+        android:textAllCaps="false"
+        android:textColor="#fff"/>
+
+
 </RelativeLayout>
