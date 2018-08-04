@@ -10,12 +10,20 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.everest.mahfuz.firanggi.Utility.FiranggiUtility;
+import com.everest.mahfuz.firanggi.db.FiranggiDB;
+import com.everest.mahfuz.firanggi.model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
+import java.util.Date;
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -28,6 +36,11 @@ public class SignUpActivity extends AppCompatActivity {
     private ProgressDialog mProgressDialog;
 
     private FirebaseAuth mAuth;
+    private FirebaseUser mUser;
+
+    private String mGender = "Male";
+    private RadioGroup mUserGender;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +66,19 @@ public class SignUpActivity extends AppCompatActivity {
 
 
 
+        //getting value from radio button for user gender
+        mUserGender = findViewById(R.id.userGender);
+        mUserGender.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                RadioButton radioButton = findViewById(i);
+                mGender = radioButton.getText().toString();
+                Toast.makeText(SignUpActivity.this, mGender, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+        //sign up button action
         signUpActionBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -65,7 +91,7 @@ public class SignUpActivity extends AppCompatActivity {
                     mProgressDialog.show();
                     mProgressDialog.setTitle("Processing");
                     mProgressDialog.setMessage("Please wait while we create your account.");
-                    signUpUser(userName, email, password);
+                    signUpUser(userName, email,mGender, password);
                 } else {
                     Toast.makeText(SignUpActivity.this, "Above fields are should not be empty!", Toast.LENGTH_SHORT).show();
                 }
@@ -74,21 +100,48 @@ public class SignUpActivity extends AppCompatActivity {
         });
     }
 
-    private void signUpUser(String userName, final String email, String password) {
+    private void signUpUser(final String userName, final String email, final String userGender, final String password) {
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         Log.d("email:", email);
                         if (task.isSuccessful()) {
-                            mProgressDialog.dismiss();
-                            Intent mainIntent = new Intent(SignUpActivity.this,
-                                    MainActivity.class);
-                            startActivity(mainIntent);
-                            finish();
+
+                            User user = new User();
+                            user.setUserName(userName);
+                            user.setEmail(email);
+                            user.setGender(userGender);
+                            user.setRegisterDate(FiranggiUtility.getCurrentDate());
+                            user.setPassword(password);
+
+                            //getting current user
+                            mUser = mAuth.getCurrentUser();
+                            //String uId = mUser.getUid();
+
+                            // save the user to database
+                            FiranggiDB db = new FiranggiDB(SignUpActivity.this , mUser);
+                            db.addUser(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        mProgressDialog.dismiss();
+                                        Intent mainIntent = new Intent(SignUpActivity.this,
+                                                MainActivity.class);
+                                        // handling previous back for clear all activity
+                                        mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        startActivity(mainIntent);
+                                        finish();
+                                    } else {
+                                        mProgressDialog.hide();
+                                        Toast.makeText(SignUpActivity.this, "Something went wrong! user not saved. Contact with developer", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+
                         } else {
                             mProgressDialog.hide();
-                            Log.w("failure message:", task.getException());
+                            Log.w("SignUp failure message:", task.getException());
                             Toast.makeText(SignUpActivity.this, "Sign Up failed! Try again.", Toast.LENGTH_SHORT).show();
                         }
                     }

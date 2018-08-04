@@ -64,6 +64,7 @@ public class SignInActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             mProgressDialog.dismiss();
                             Intent signInIntent = new Intent(SignInActivity.this, MainActivity.class);
+                            signInIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(signInIntent);
                             finish();
                         } else{

@@ -21,9 +21,7 @@ public class StartActivity extends AppCompatActivity {
         setContentView(R.layout.activity_start);
 
         //checking internet is either connected or not
-        if (isInternetConnected()) {
-            Toast.makeText(this, "internet is connected!", Toast.LENGTH_SHORT).show();
-        } else {
+        if (!isInternetConnected()) {
             //show the message on alert dialog
             AlertDialog.Builder builder = new AlertDialog.Builder(StartActivity.this);
             builder.setTitle("No Internet Connection");
@@ -50,7 +48,6 @@ public class StartActivity extends AppCompatActivity {
                 Intent signUpIntent = new Intent(StartActivity.this,
                         SignUpActivity.class);
                 startActivity(signUpIntent);
-                finish();
             }
         });
 
@@ -60,7 +57,6 @@ public class StartActivity extends AppCompatActivity {
                 Intent signInIntent = new Intent(StartActivity.this,
                         SignInActivity.class);
                 startActivity(signInIntent);
-                finish();
             }
         });
 
