@@ -22,6 +22,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.Date;
 
@@ -41,6 +43,7 @@ public class SignUpActivity extends AppCompatActivity {
     private String mGender = "Male";
     private RadioGroup mUserGender;
 
+    private DatabaseReference mUserRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,12 +111,15 @@ public class SignUpActivity extends AppCompatActivity {
                         Log.d("email:", email);
                         if (task.isSuccessful()) {
 
+                            String deviceTokeniId = FirebaseInstanceId.getInstance().getToken();
+
                             User user = new User();
                             user.setUserName(userName);
                             user.setEmail(email);
                             user.setGender(userGender);
                             user.setRegisterDate(FiranggiUtility.getCurrentDate());
                             user.setPassword(password);
+                            user.setDeviceToken(deviceTokeniId);
 
                             //getting current user
                             mUser = mAuth.getCurrentUser();

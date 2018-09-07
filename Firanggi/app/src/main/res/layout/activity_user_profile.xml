@@ -7,10 +7,103 @@
     tools:context="com.everest.mahfuz.firanggi.UserProfileActivity">
 
     <TextView
-        android:id="@+id/user_idTv"
+        android:id="@+id/totalFriendTv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/pUserStatus"
+        android:layout_marginStart="14dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="Total Friends"
+        />
+
+    <LinearLayout
+        android:id="@+id/pBackgroundLayout"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/avatar_placeholder"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:clipToPadding="false"
+        >
+
+
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/pUserIv"
+            android:layout_width="180dp"
+            android:layout_height="180dp"
+            android:layout_centerInParent="true"
+            android:elevation="5dp"
+            app:civ_border_width="2dp"
+            app:civ_border_color="#afacac"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="20dp"
+            android:src="@drawable/avatar_placeholder">
+
+
+        </de.hdodenhof.circleimageview.CircleImageView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#30974334"
+            android:orientation="horizontal"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp">
+
+
+            <Button
+                android:id="@+id/declineFrBt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bordered_button"
+                android:layout_marginLeft="5dp"
+                android:textAllCaps="false"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:textColor="@color/white"
+                android:text="Decline Friend Request"
+                android:visibility="gone"/>
+
+            <Button
+                android:id="@+id/sendRequestBt"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:text="Send Friend Request"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/bordered_button"/>
+
+
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/pUserName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/pBackgroundLayout"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:text="TextView" />
+        android:layout_marginTop="15dp"
+        android:text="@string/default_user_name_text"
+        android:textSize="24sp" />
+
+    <TextView
+        android:id="@+id/pUserStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/pUserName"
+        android:layout_centerHorizontal="true"
+        android:text="@string/default_status_Text"
+        android:textSize="14sp" />
+
 </RelativeLayout>

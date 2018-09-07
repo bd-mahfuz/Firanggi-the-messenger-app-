@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.everest.mahfuz.firanggi.R;
@@ -39,6 +40,8 @@ public class AllUsersFragment extends Fragment {
 
     private ProgressDialog progressDialog;
 
+    private TextView mNoUserMsgTv;
+
 
     public AllUsersFragment() {
         // Required empty public constructor
@@ -52,26 +55,37 @@ public class AllUsersFragment extends Fragment {
 
         progressDialog = new ProgressDialog(getActivity());
 
+        mNoUserMsgTv = view.findViewById(R.id.noUserTv);
+
         mAllUserRv = view.findViewById(R.id.allUserRv);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         mAllUserRv.setLayoutManager(layoutManager);
 
 
         mDbRef = FirebaseDatabase.getInstance().getReference().child("Users");
+        mDbRef.keepSynced(true);
 
+        progressDialog.setMessage("Loading data...");
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.show();
         mDbRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                progressDialog.show();
+
                 userList.clear();
                 for (DataSnapshot data: dataSnapshot.getChildren()) {
                     User user = data.getValue(User.class);
                     userList.add(user);
                 }
-                Log.d("user list size:", userList.get(0).getUserImage()+"");
-                mUserListAdapter = new UsersRVAdapter(getActivity(), userList);
-                mAllUserRv.setAdapter(mUserListAdapter);
-                progressDialog.dismiss();
+                if (userList.size() == 0) {
+                    mNoUserMsgTv.setVisibility(View.VISIBLE);
+                    progressDialog.dismiss();
+                }else {
+                    Log.d("user list size:", userList.get(0).getUserImage()+"");
+                    mUserListAdapter = new UsersRVAdapter(getActivity(), userList);
+                    mAllUserRv.setAdapter(mUserListAdapter);
+                    progressDialog.dismiss();
+                }
             }
 
             @Override

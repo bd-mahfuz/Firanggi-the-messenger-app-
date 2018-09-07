@@ -15,6 +15,24 @@ public class User {
     private String userImage = "";
     private String thumbnailImage = "";
     private String backgroundImage = "";
+    private String deviceToken="";
+    /*private String online;
+
+    public String getOnline() {
+        return online;
+    }
+
+    public void setOnline(String online) {
+        this.online = online;
+    }*/
+
+    public String getDeviceToken() {
+        return deviceToken;
+    }
+
+    public void setDeviceToken(String deviceToken) {
+        this.deviceToken = deviceToken;
+    }
 
     public String getBackgroundImage() {
         return backgroundImage;

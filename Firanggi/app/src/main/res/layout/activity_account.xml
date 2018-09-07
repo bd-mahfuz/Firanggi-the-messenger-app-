@@ -76,7 +76,9 @@
         android:layout_marginBottom="114dp"
         android:text="Change Image"
         android:textAlignment="center"
-        android:textAllCaps="false"/>
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:background="@drawable/bordered_button"/>
 
     <Button
         android:id="@+id/changeStatusBt"
@@ -85,10 +87,12 @@
         android:layout_below="@+id/changeImageBt"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="-114dp"
+        android:paddingRight="10dp"
+        android:paddingLeft="10dp"
         android:text="Change Status"
         android:textAllCaps="false"
-        android:backgroundTint="@color/colorPrimaryDark"
         android:textColor="@color/white"
+        android:background="@drawable/bordered_button"
         />
 
 

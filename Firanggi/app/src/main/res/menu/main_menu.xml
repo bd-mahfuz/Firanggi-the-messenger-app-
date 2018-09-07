@@ -9,6 +9,10 @@
         android:id="@+id/usersMenu">
 
     </item>
+    <item android:title="@string/about_menu"
+        android:id="@+id/aboutMenu">
+
+    </item>
     <item android:title="Logout"
         android:id="@+id/logoutMenu">
 

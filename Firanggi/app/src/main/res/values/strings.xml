@@ -10,4 +10,10 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="default_status_Text">Hello, I am using Firanggi chat app.</string>
     <string name="default_user_name_text">Andrew Rasel</string>
+    <string name="about_menu">About</string>
+
+    <string name="default_notification_channel_id">default</string>
+    <string name="no_user_msg">No user registered yet.</string>
+    <string name="friends_not_found">Friends are not Found</string>
+
 </resources>

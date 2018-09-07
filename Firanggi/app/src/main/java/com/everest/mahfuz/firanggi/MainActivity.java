@@ -11,6 +11,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,10 +22,17 @@ import android.widget.Toast;
 import com.everest.mahfuz.firanggi.adapter.SectionsPageAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
+    private DatabaseReference mUserRef;
+
+    private static final String TAG = "MainActivity";
 
     private Toolbar mToolbar;
 
@@ -40,8 +48,19 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mAuth = FirebaseAuth.getInstance();
+
+
+        if (mAuth.getUid() != null) {
+            mUserRef = FirebaseDatabase.getInstance().getReference()
+                    .child("Users").child(mAuth.getCurrentUser().getUid());
+        }
+
+        String token = FirebaseInstanceId.getInstance().getToken();
+        Log.d(TAG, "token id:"+ token);
+
         //checking internet is either connected or not
-        if (!isInternetConnected()) {
+        /*if (!isInternetConnected()) {
             //show the message on alert dialog
             AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
             builder.setTitle("No Internet Connection");
@@ -56,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
                     });
             AlertDialog dialog = builder.create();
             dialog.show();
-        }
+        }*/
 
         // working with tab
         mViewPager = findViewById(R.id.viewPager);
@@ -68,7 +87,6 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(mViewPager);
 
 
-        mAuth = FirebaseAuth.getInstance();
 
         mToolbar = findViewById(R.id.mainPageToolbar);
         setSupportActionBar(mToolbar);
@@ -95,7 +113,19 @@ public class MainActivity extends AppCompatActivity {
         if (currentUser == null) {
             //sending to start activity if user not signed in
             sendToStartActivity();
+        } else {
+            mUserRef.child("online").setValue("true");
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        if (mUserRef != null) {
+            mUserRef.child("online").setValue(ServerValue.TIMESTAMP);
+        }
+
     }
 
     private void sendToStartActivity() {
@@ -120,6 +150,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (item.getItemId() == R.id.logoutMenu) {
             //logout user
+            mUserRef.child("online").setValue(ServerValue.TIMESTAMP);
             FirebaseAuth.getInstance().signOut();
             //sending to start activity if user logged out
             sendToStartActivity();
@@ -130,6 +161,9 @@ public class MainActivity extends AppCompatActivity {
         else if (item.getItemId() == R.id.usersMenu){
             Intent userIntent = new Intent(MainActivity.this, UsersActivity.class);
             startActivity(userIntent);
+        }else if (item.getItemId() == R.id.aboutMenu){
+            Intent aboutIntent = new Intent(MainActivity.this, AboutActivity.class);
+            startActivity(aboutIntent);
         }
 
         return true;

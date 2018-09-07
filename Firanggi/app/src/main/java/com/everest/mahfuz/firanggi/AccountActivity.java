@@ -39,6 +39,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 import com.theartofdev.edmodo.cropper.CropImage;
@@ -106,6 +108,8 @@ public class AccountActivity extends AppCompatActivity {
         mFirebaseUser = mAuth.getCurrentUser();
 
         mDbRef = FirebaseDatabase.getInstance().getReference().child("Users").child(mFirebaseUser.getUid());
+        //for offline capabilities
+        //mDbRef.keepSynced(true);
 
         mDbRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -124,7 +128,23 @@ public class AccountActivity extends AppCompatActivity {
                             });
                 }
                 if (!user.getUserImage().equals("")) {
-                    Picasso.get().load(user.getUserImage()).placeholder(R.drawable.avatar_placeholder).into(mCircleIv);
+
+                    //Picasso.get().load(user.getUserImage()).placeholder(R.drawable.avatar_placeholder).into(mCircleIv);
+                    Picasso.get().load(user.getUserImage()).networkPolicy(NetworkPolicy.OFFLINE)
+                            .placeholder(R.drawable.avatar_placeholder)
+                            .into(mCircleIv, new Callback() {
+                                @Override
+                                public void onSuccess() {
+
+                                }
+
+                                @Override
+                                public void onError(Exception e) {
+                                    Picasso.get().load(user.getUserImage()).placeholder(R.drawable.avatar_placeholder).into(mCircleIv);
+
+                                }
+                            });
+
                 }
                 if (!user.getStatus().equals("")) {
                     mUserStatusTv.setText(user.getStatus());

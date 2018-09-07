@@ -14,6 +14,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 public class SignInActivity extends AppCompatActivity {
 
@@ -23,6 +26,8 @@ public class SignInActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private ProgressDialog mProgressDialog;
+
+    private DatabaseReference mUserRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,10 +68,21 @@ public class SignInActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             mProgressDialog.dismiss();
-                            Intent signInIntent = new Intent(SignInActivity.this, MainActivity.class);
-                            signInIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startActivity(signInIntent);
-                            finish();
+
+                            String deviceTokenId = FirebaseInstanceId.getInstance().getToken();
+                            mUserRef = FirebaseDatabase.getInstance().getReference().child("Users");
+                            mUserRef.child(mAuth.getUid()).child("deviceToken").setValue(deviceTokenId).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if(task.isSuccessful()) {
+                                        Intent signInIntent = new Intent(SignInActivity.this, MainActivity.class);
+                                        signInIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        startActivity(signInIntent);
+                                        finish();
+                                    }
+                                }
+                            });
+
                         } else{
                             mProgressDialog.hide();
                             Toast.makeText(SignInActivity.this, "Sign Up failed! Try again.", Toast.LENGTH_SHORT).show();

@@ -21,7 +21,7 @@ public class StartActivity extends AppCompatActivity {
         setContentView(R.layout.activity_start);
 
         //checking internet is either connected or not
-        if (!isInternetConnected()) {
+        /*if (!isInternetConnected()) {
             //show the message on alert dialog
             AlertDialog.Builder builder = new AlertDialog.Builder(StartActivity.this);
             builder.setTitle("No Internet Connection");
@@ -36,7 +36,7 @@ public class StartActivity extends AppCompatActivity {
                     });
             AlertDialog dialog = builder.create();
             dialog.show();
-        }
+        }*/
 
 
         signUpBt = findViewById(R.id.signUpBt);
